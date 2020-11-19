@@ -1,63 +1,51 @@
 import * as React from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import Home from './components/Home'
+import Navbar from './components/NavBar';
+import newBlog from './components/newBlog';
+import SingleBlog from './components/SingleBlog'
+
 
 class App extends React.Component<IAppProps, IAppState> {
 	constructor(props: IAppProps) {
 		super(props);
-		this.state = {
-			name: null
-		};
+		this.state = { blogs: [] };
 	}
 
 	async componentDidMount() {
 		try {
-			let r = await fetch('/api/hello');
-			let name = await r.json();
-			this.setState({ name });
+			let r = await fetch('/api/blogs');
+			let blogs = await r.json();
+			this.setState({ blogs });
 		} catch (error) {
 			console.log(error);
 		}
-	}
+	};
 
 	render() {
+
 		return (
 			<main className="container my-5">
-				<h1 className="text-primary text-center">Hello {this.state.name}!</h1>
+				<h1 className="text-primary text-center">3LOGGER!</h1>
+				<ul className="list-group">
+					<Router>
+						<Navbar />
+						<Switch>
+							<Route exact path="/" component={Home} />
+							<Route exact path="/blogs/add" component={newBlog} />
+							<Route exact path="/blogs/:id/" component={SingleBlog} />
+						</Switch>
+					</Router>
+				</ul>
 			</main>
 		);
 	}
 }
 
-export interface IAppProps {}
+export interface IAppProps { }
 
 export interface IAppState {
-	name: string;
+	blogs: Array<{ id: number, title: string, body: string, author: string }>;
 }
 
 export default App;
-
-//
-// const App = (props: AppProps) => {
-// 	const [greeting, setGreeting] = React.useState<string>('');
-
-// 	React.useEffect(() => {
-// 		(async () => {
-// 			try {
-// 				const res = await fetch('/api/hello');
-// 				const greeting = await res.json();
-// 				setGreeting(greeting);
-// 			} catch (error) {
-// 				console.log(error);
-// 			}
-// 		})();
-// 	}, []);
-
-// 	return (
-// 		<div className="min-vh-100 d-flex justify-content-center align-items-center">
-// 			<h1 className="display-1">Hello {greeting}!</h1>
-// 		</div>
-// 	);
-// };
-
-// interface AppProps {}
-
-// export default App;
