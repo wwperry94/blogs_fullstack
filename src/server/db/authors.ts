@@ -24,7 +24,7 @@ export const one = async (id: number) => {
 };
 
 
-export const insert = (name: string, email: string) => Query("Insert into authors(name, email)  VALUES (?, ?,);", [name, email]);
+export const insert = (name: string, email: string) => Query("Insert into authors(name, email)  VALUES (?, ?);", [name, email]);
 
 export const update = (name: string, email: string) => Query("UPDATE authors SET name = ?, email = ? WHERE authors.id = ?", [name, email]);
 

@@ -1,13 +1,12 @@
 import { ReactNode } from "react";
 
 export interface blog {
-    blog: any;
-    id: number;
-    content: string | number | string[];
-    email: ReactNode;
-    name: ReactNode;
-    title: ReactNode;
-    
+    id?: number,
+    content: string,
+    email: string,
+    name: string,
+    title: string,
+    authorid: string;
 }
 
 export interface blogHome {

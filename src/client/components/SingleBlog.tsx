@@ -5,13 +5,20 @@ import { blog } from '../util/types'
 
 
 const SingleBlog: React.FC<ISingleBlogProps> = (props: ISingleBlogProps) => {
-    const [blog, setblog] = React.useState<blog>(null);
+    const [blog, setblog] = React.useState<blog>({
+        id: Number(""),
+        content: "",
+        email: "",
+        name: "",
+        title: "",
+        authorid: ""
+    });
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
         (async () => {
             try {
-                //setLoading(true);
+                setLoading(true);
                 let res = await fetch(`/api/blogs/${props.match.params.id}`);
                 let blog = await res.json();
                 await setblog(blog);
@@ -34,27 +41,35 @@ const SingleBlog: React.FC<ISingleBlogProps> = (props: ISingleBlogProps) => {
     };
 
     const editBlog = async (id: number) => {
+        const newContent = {
+            content: blog.content,
+        }
         await fetch(`/api/blogs/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(blog.blog.content)
+            body: JSON.stringify(newContent)
         });
 
         props.history.push("/");
     };
 
-    // const onMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setblog({
-    //     blog.content: e.target.value,
-    // });
+    const onMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setblog({
+        id: blog.id,
+        content: e.target.value,
+        email: blog.email,
+        name: blog.name,
+        title: blog.title,
+        authorid: blog.authorid
+    }
+    );
 
     if (loading) {
         return (
             <div className="spinner-border" role="status">
                 <span className="sr-only">Loading...</span>
             </div>
-
         )
     } else {
         return (
@@ -71,11 +86,11 @@ const SingleBlog: React.FC<ISingleBlogProps> = (props: ISingleBlogProps) => {
                             <h5 className="card-featured">email: {blog.email}</h5>
                         </div>
                         <div className="row">
-                            <textarea 
-                            className="card-text" 
-                            defaultValue={blog.content} 
-                            cols={50} rows={15} 
-                            // onChange={(e) => onMessageChange(e)}
+                            <textarea
+                                className="card-text"
+                                defaultValue={blog.content}
+                                cols={50} rows={15}
+                                onChange={(e) => onMessageChange(e)}
                             ></textarea>
                         </div>
                         <button className="btn btn-sm btn-outline-dark float-right mx-1" onClick={() => editBlog(blog.id)}>Save</button>
